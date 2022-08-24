@@ -2,8 +2,16 @@
 
 Home iOS screen 
 
+<p float="left">
+
 <img src="images/home_screen.png" height="300em" />
 
-Saved articles Android screen
+</p>
+
+Saved articles Android 
+
+<p float="left">
 
 <img src="images/saved_articles_screen.png" height="300em" />
+
+</p>
