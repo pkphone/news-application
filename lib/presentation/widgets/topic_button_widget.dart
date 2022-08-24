@@ -14,15 +14,22 @@ class TopicButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: color,
-        textStyle: const TextStyle(
-          fontSize: 20.0,
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 2.0,
+        right: 2.0,
       ),
-      onPressed: onPressed,
-      child: Text(name),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: color,
+          textStyle: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(name),
+      ),
     );
   }
 }

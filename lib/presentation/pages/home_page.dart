@@ -1,11 +1,11 @@
-import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:news_application/presentation/mobx/home_store.dart';
-import 'package:news_application/presentation/utils/method_util.dart';
 import 'package:news_application/presentation/utils/string_util.dart';
-import 'package:news_application/presentation/widgets/topic_button_widget.dart';
+import 'package:news_application/presentation/widgets/article_item_widget.dart';
+import 'package:news_application/presentation/widgets/common_button_widget.dart';
+import 'package:news_application/presentation/widgets/topic_item_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -34,64 +34,16 @@ class _HomePageState extends State<HomePage> {
         } else if (_homeStore.articles.length <= 1) {
           return const SizedBox();
         } else if (_homeStore.currentIndex == 0) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                if (_homeStore.currentIndex != null) {
-                  _homeStore.nextArticle();
-                  _homeStore.checkArticleIsInBox(_homeStore
-                      .articles[_homeStore.currentIndex!].publishedDate!);
-                }
-              },
-              icon: const Icon(
-                Icons.chevron_right,
-                size: 30.0,
+          return Row(
+            children: [
+              const Expanded(
+                flex: 1,
+                child: SizedBox(),
               ),
-              label: const Text(''),
-            ),
-          );
-        } else if (_homeStore.currentIndex == _homeStore.articles.length - 1) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                _homeStore.previousArticle();
-                _homeStore.checkArticleIsInBox(_homeStore
-                    .articles[_homeStore.currentIndex!].publishedDate!);
-              },
-              icon: const Icon(
-                Icons.chevron_left,
-                size: 30.0,
-              ),
-              label: const Text(''),
-            ),
-          );
-        }
-
-        return Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _homeStore.previousArticle();
-                    _homeStore.checkArticleIsInBox(_homeStore
-                        .articles[_homeStore.currentIndex!].publishedDate!);
-                  },
-                  icon: const Icon(
-                    Icons.chevron_left,
-                    size: 30.0,
-                  ),
-                  label: const Text(''),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton.icon(
+              Expanded(
+                flex: 1,
+                child: CommonButtonWidget(
+                  icon: Icons.chevron_right,
                   onPressed: () {
                     if (_homeStore.currentIndex != null) {
                       _homeStore.nextArticle();
@@ -99,12 +51,54 @@ class _HomePageState extends State<HomePage> {
                           .articles[_homeStore.currentIndex!].publishedDate!);
                     }
                   },
-                  icon: const Icon(
-                    Icons.chevron_right,
-                    size: 30.0,
-                  ),
-                  label: const Text(''),
                 ),
+              ),
+            ],
+          );
+        } else if (_homeStore.currentIndex == _homeStore.articles.length - 1) {
+          return Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: CommonButtonWidget(
+                  icon: Icons.chevron_left,
+                  onPressed: () {
+                    _homeStore.previousArticle();
+                    _homeStore.checkArticleIsInBox(_homeStore
+                        .articles[_homeStore.currentIndex!].publishedDate!);
+                  },
+                ),
+              ),
+              const Expanded(
+                flex: 1,
+                child: SizedBox(),
+              ),
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            Expanded(
+              child: CommonButtonWidget(
+                icon: Icons.chevron_left,
+                onPressed: () {
+                  _homeStore.previousArticle();
+                  _homeStore.checkArticleIsInBox(_homeStore
+                      .articles[_homeStore.currentIndex!].publishedDate!);
+                },
+              ),
+            ),
+            Expanded(
+              child: CommonButtonWidget(
+                icon: Icons.chevron_right,
+                onPressed: () {
+                  if (_homeStore.currentIndex != null) {
+                    _homeStore.nextArticle();
+                    _homeStore.checkArticleIsInBox(_homeStore
+                        .articles[_homeStore.currentIndex!].publishedDate!);
+                  }
+                },
               ),
             )
           ],
@@ -113,6 +107,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text(
           StringUtil.appName,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25.0,
+          ),
         ),
         actions: [
           Padding(
@@ -124,8 +122,8 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 icon: const Icon(
-                  Icons.save,
-                  size: 40.0,
+                  Icons.collections_bookmark,
+                  size: 30.0,
                 )),
           )
         ],
@@ -135,20 +133,13 @@ class _HomePageState extends State<HomePage> {
           Observer(builder: (_) {
             return Wrap(
               children: List.generate(
-                StringUtil.topics.length,
-                (index) => Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: TopicButtonWidget(
-                    color: _homeStore.topicName == StringUtil.topics[index]
-                        ? Colors.blue
-                        : Colors.grey,
-                    name: StringUtil.topics[index],
-                    onPressed: () => _homeStore.fetchArticles(
-                      StringUtil.topics[index],
-                    ),
-                  ),
-                ),
-              ),
+                  StringUtil.topics.length,
+                  (index) => TopicItemWidget(
+                      topic: _homeStore.topicName!,
+                      index: index,
+                      onPressed: () => _homeStore.fetchArticles(
+                            StringUtil.topics[index],
+                          ))),
             );
           }),
           Expanded(
@@ -165,61 +156,48 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       _homeStore.errorMsg!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        fontSize: 16.0,
+                      ),
                     ),
                   ),
                 );
               }
 
-              return Column(
-                children: [
-                  Text(_homeStore.articles[_homeStore.currentIndex!].title!),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: AnyLinkPreview(
-                      key: Key(
-                          _homeStore.articles[_homeStore.currentIndex!].link!),
-                      link: MethodUtil.linkPreviewBugFix(
-                          _homeStore.articles[_homeStore.currentIndex!].link!),
-                      displayDirection: UIDirection.uiDirectionHorizontal,
-                      cache: const Duration(microseconds: 1),
-                      errorWidget: InkWell(
-                        onTap: () {
-                          MethodUtil.launch(_homeStore
-                              .articles[_homeStore.currentIndex!].link!);
-                        },
-                        child: SizedBox(
-                          height: 200.0,
-                          child: Center(
-                              child: Text(
-                            _homeStore.articles[_homeStore.currentIndex!].link!,
-                          )),
+              if (_homeStore.articles.isEmpty) {
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.book,
+                        size: 40.0,
+                      ),
+                      Text(
+                        StringUtil.articlesEmpty,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Text(
-                      'Source by ${_homeStore.articles[_homeStore.currentIndex!].source!.title!} ${_homeStore.articles[_homeStore.currentIndex!].source!.url}'),
-                  Text(
-                    MethodUtil.dateConvert(
-                      _homeStore
-                          .articles[_homeStore.currentIndex!].publishedDate!,
-                    ),
-                  ),
-                  IconButton(
-                    color:
-                        _homeStore.articleIsInBox! ? Colors.blue : Colors.grey,
-                    icon: const Icon(
-                      Icons.bookmark,
-                      size: 50.0,
-                    ),
-                    onPressed: () async {
-                      await _homeStore.saveArticle(
-                          _homeStore.articles[_homeStore.currentIndex!]);
-                      _homeStore.checkArticleIsInBox(_homeStore
-                          .articles[_homeStore.currentIndex!].publishedDate!);
-                    },
-                  ),
-                ],
+                );
+              }
+
+              return ArticleItemWidget(
+                articleModel: _homeStore.articles[_homeStore.currentIndex!],
+                articleIsInBox: _homeStore.articleIsInBox!,
+                onPressedSave: (() async {
+                  await _homeStore.saveArticle(
+                      _homeStore.articles[_homeStore.currentIndex!]);
+                  _homeStore.checkArticleIsInBox(_homeStore
+                      .articles[_homeStore.currentIndex!].publishedDate!);
+                }),
               );
             }),
           ),

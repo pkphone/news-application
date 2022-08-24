@@ -23,6 +23,10 @@ class MethodUtil {
 
   static String linkPreviewBugFix(String link) {
     List<String> paths = link.split('www.');
-    return paths[0] + paths[1];
+    if (paths.length > 1) {
+      return paths[0] + paths[1];
+    } else {
+      return paths[0];
+    }
   }
 }

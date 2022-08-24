@@ -14,4 +14,6 @@ class StringUtil {
     'SPORTS',
     'HEALTH',
   ];
+  static const String savedArticlesEmpty = 'There is no saved article!';
+  static const String articlesEmpty = 'There is no article!';
 }

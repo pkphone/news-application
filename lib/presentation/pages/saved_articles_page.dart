@@ -27,6 +27,10 @@ class _SavedArticlesPageState extends State<SavedArticlesPage> {
       appBar: AppBar(
         title: const Text(
           StringUtil.savedArticles,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25.0,
+          ),
         ),
       ),
       body: Observer(builder: (_) {
@@ -36,13 +40,37 @@ class _SavedArticlesPageState extends State<SavedArticlesPage> {
           );
         }
 
+        if (_homeStore.savedArticles.isEmpty) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.collections_bookmark,
+                  size: 40.0,
+                ),
+                Text(
+                  StringUtil.savedArticlesEmpty,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return ListView.builder(
             itemCount: _homeStore.savedArticles.length,
             itemBuilder: ((_, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
+              return Card(
                 child: ArticleItemWidget(
                   articleModel: _homeStore.savedArticles[index],
+                  articleIsInBox: true,
+                  onPressedSave: (() async {}),
                 ),
               );
             }));
