@@ -48,7 +48,7 @@ abstract class HomeStoreBase with Store {
         errorMsg = failure.message;
       },
       (data) {
-        // extract current date
+        // extract data by current date
         for (var article in data.articles!) {
           String serverDate = MethodUtil.dateConvert(article.publishedDate!);
           if (serverDate.split(' ')[0] == MethodUtil.getCurrentDate()) {

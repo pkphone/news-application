@@ -133,13 +133,19 @@ class _HomePageState extends State<HomePage> {
           Observer(builder: (_) {
             return Wrap(
               children: List.generate(
-                  StringUtil.topics.length,
-                  (index) => TopicItemWidget(
-                      topic: _homeStore.topicName!,
-                      index: index,
-                      onPressed: () => _homeStore.fetchArticles(
-                            StringUtil.topics[index],
-                          ))),
+                StringUtil.topics.length,
+                (index) => TopicItemWidget(
+                    topic: _homeStore.topicName!,
+                    index: index,
+                    onPressed: () {
+                      // prevent frequent button press
+                      if (!_homeStore.isLoadingHomePage) {
+                        _homeStore.fetchArticles(
+                          StringUtil.topics[index],
+                        );
+                      }
+                    }),
+              ),
             );
           }),
           Expanded(
