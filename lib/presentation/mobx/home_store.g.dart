@@ -9,19 +9,19 @@ part of 'home_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeStore on HomeStoreBase, Store {
-  late final _$isLoadingAtom =
-      Atom(name: 'HomeStoreBase.isLoading', context: context);
+  late final _$isLoadingHomePageAtom =
+      Atom(name: 'HomeStoreBase.isLoadingHomePage', context: context);
 
   @override
-  bool get isLoading {
-    _$isLoadingAtom.reportRead();
-    return super.isLoading;
+  bool get isLoadingHomePage {
+    _$isLoadingHomePageAtom.reportRead();
+    return super.isLoadingHomePage;
   }
 
   @override
-  set isLoading(bool value) {
-    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
-      super.isLoading = value;
+  set isLoadingHomePage(bool value) {
+    _$isLoadingHomePageAtom.reportWrite(value, super.isLoadingHomePage, () {
+      super.isLoadingHomePage = value;
     });
   }
 
@@ -74,12 +74,86 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$articleIsInBoxAtom =
+      Atom(name: 'HomeStoreBase.articleIsInBox', context: context);
+
+  @override
+  bool? get articleIsInBox {
+    _$articleIsInBoxAtom.reportRead();
+    return super.articleIsInBox;
+  }
+
+  @override
+  set articleIsInBox(bool? value) {
+    _$articleIsInBoxAtom.reportWrite(value, super.articleIsInBox, () {
+      super.articleIsInBox = value;
+    });
+  }
+
+  late final _$isLoadingSavedArticlesPageAtom =
+      Atom(name: 'HomeStoreBase.isLoadingSavedArticlesPage', context: context);
+
+  @override
+  bool get isLoadingSavedArticlesPage {
+    _$isLoadingSavedArticlesPageAtom.reportRead();
+    return super.isLoadingSavedArticlesPage;
+  }
+
+  @override
+  set isLoadingSavedArticlesPage(bool value) {
+    _$isLoadingSavedArticlesPageAtom
+        .reportWrite(value, super.isLoadingSavedArticlesPage, () {
+      super.isLoadingSavedArticlesPage = value;
+    });
+  }
+
+  late final _$articlesAtom =
+      Atom(name: 'HomeStoreBase.articles', context: context);
+
+  @override
+  List<ArticleModel> get articles {
+    _$articlesAtom.reportRead();
+    return super.articles;
+  }
+
+  @override
+  set articles(List<ArticleModel> value) {
+    _$articlesAtom.reportWrite(value, super.articles, () {
+      super.articles = value;
+    });
+  }
+
   late final _$fetchArticlesAsyncAction =
       AsyncAction('HomeStoreBase.fetchArticles', context: context);
 
   @override
   Future<dynamic> fetchArticles() {
     return _$fetchArticlesAsyncAction.run(() => super.fetchArticles());
+  }
+
+  late final _$checkArticleIsInBoxAsyncAction =
+      AsyncAction('HomeStoreBase.checkArticleIsInBox', context: context);
+
+  @override
+  Future<dynamic> checkArticleIsInBox(String publishedDate) {
+    return _$checkArticleIsInBoxAsyncAction
+        .run(() => super.checkArticleIsInBox(publishedDate));
+  }
+
+  late final _$saveArticleAsyncAction =
+      AsyncAction('HomeStoreBase.saveArticle', context: context);
+
+  @override
+  Future<dynamic> saveArticle(ArticleModel articleModel) {
+    return _$saveArticleAsyncAction.run(() => super.saveArticle(articleModel));
+  }
+
+  late final _$getSavedArticlesAsyncAction =
+      AsyncAction('HomeStoreBase.getSavedArticles', context: context);
+
+  @override
+  Future<dynamic> getSavedArticles() {
+    return _$getSavedArticlesAsyncAction.run(() => super.getSavedArticles());
   }
 
   late final _$HomeStoreBaseActionController =
@@ -110,10 +184,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
   @override
   String toString() {
     return '''
-isLoading: ${isLoading},
+isLoadingHomePage: ${isLoadingHomePage},
 articleResponseModel: ${articleResponseModel},
 errorMsg: ${errorMsg},
-currentIndex: ${currentIndex}
+currentIndex: ${currentIndex},
+articleIsInBox: ${articleIsInBox},
+isLoadingSavedArticlesPage: ${isLoadingSavedArticlesPage},
+articles: ${articles}
     ''';
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:news_application/presentation/mobx/home_store.dart';
 import 'package:news_application/presentation/utils/method_util.dart';
 import 'package:news_application/presentation/utils/string_util.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,12 +20,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _homeStore.fetchArticles();
     super.initState();
-  }
-
-  Future<void> _launchUrl(String url) async {
-    if (!await launchUrl(Uri.parse(url))) {
-      throw 'Could not launch $url';
-    }
   }
 
   @override
@@ -45,6 +38,10 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 if (_homeStore.currentIndex != null) {
                   _homeStore.nextArticle();
+                  _homeStore.checkArticleIsInBox(_homeStore
+                      .articleResponseModel!
+                      .articles![_homeStore.currentIndex!]
+                      .publishedDate!);
                 }
               },
               icon: const Icon(
@@ -63,6 +60,8 @@ class _HomePageState extends State<HomePage> {
             child: ElevatedButton.icon(
               onPressed: () {
                 _homeStore.previousArticle();
+                _homeStore.checkArticleIsInBox(_homeStore.articleResponseModel!
+                    .articles![_homeStore.currentIndex!].publishedDate!);
               },
               icon: const Icon(
                 Icons.chevron_left,
@@ -81,6 +80,10 @@ class _HomePageState extends State<HomePage> {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     _homeStore.previousArticle();
+                    _homeStore.checkArticleIsInBox(_homeStore
+                        .articleResponseModel!
+                        .articles![_homeStore.currentIndex!]
+                        .publishedDate!);
                   },
                   icon: const Icon(
                     Icons.chevron_left,
@@ -97,6 +100,10 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     if (_homeStore.currentIndex != null) {
                       _homeStore.nextArticle();
+                      _homeStore.checkArticleIsInBox(_homeStore
+                          .articleResponseModel!
+                          .articles![_homeStore.currentIndex!]
+                          .publishedDate!);
                     }
                   },
                   icon: const Icon(
@@ -114,9 +121,24 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           StringUtil.appName,
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+                onPressed: () {
+                  Modular.to.pushNamed(
+                    '/home/saved-articles',
+                  );
+                },
+                icon: const Icon(
+                  Icons.save,
+                  size: 40.0,
+                )),
+          )
+        ],
       ),
       body: Observer(builder: (_) {
-        if (_homeStore.isLoading) {
+        if (_homeStore.isLoadingHomePage) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -148,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                 cache: const Duration(microseconds: 1),
                 errorWidget: InkWell(
                   onTap: () {
-                    _launchUrl(_homeStore.articleResponseModel!
+                    MethodUtil.launch(_homeStore.articleResponseModel!
                         .articles![_homeStore.currentIndex!].link!);
                   },
                   child: SizedBox(
@@ -169,6 +191,19 @@ class _HomePageState extends State<HomePage> {
                 _homeStore.articleResponseModel!
                     .articles![_homeStore.currentIndex!].publishedDate!,
               ),
+            ),
+            IconButton(
+              color: _homeStore.articleIsInBox! ? Colors.blue : Colors.grey,
+              icon: const Icon(
+                Icons.bookmark,
+                size: 50.0,
+              ),
+              onPressed: () async {
+                await _homeStore.saveArticle(_homeStore
+                    .articleResponseModel!.articles![_homeStore.currentIndex!]);
+                _homeStore.checkArticleIsInBox(_homeStore.articleResponseModel!
+                    .articles![_homeStore.currentIndex!].publishedDate!);
+              },
             ),
           ],
         );

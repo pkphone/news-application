@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:news_application/data/api_client.dart';
 import 'package:news_application/data/api_service.dart';
 import 'package:news_application/data/repositories/article_repo_impl.dart';
+import 'package:news_application/data/repositories/local_data_source_impl.dart';
 import 'package:news_application/data/repositories/remote_data_source_impl.dart';
 import 'package:news_application/domain/usecases/article_usecase.dart';
 import 'package:news_application/presentation/mobx/home_store.dart';
@@ -32,6 +33,9 @@ class AppModule extends Module {
         ),
         Bind(
           (i) => HomeStore(),
+        ),
+        Bind(
+          (i) => LocalDataSourceImpl(),
         ),
       ];
 

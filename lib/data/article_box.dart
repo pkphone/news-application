@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:news_application/data/models/article_response_model.dart';
 
-class ArticleBox {
+class ArticleBox implements Disposable {
   static const String _key = 'articleBox';
 
   final Box<ArticleResponseModel> _box;
@@ -26,5 +27,10 @@ class ArticleBox {
 
   Future deleteArticles() {
     return _box.clear();
+  }
+
+  @override
+  void dispose() {
+    _box.close();
   }
 }
