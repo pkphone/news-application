@@ -48,6 +48,7 @@ abstract class HomeStoreBase with Store {
         errorMsg = failure.message;
       },
       (data) {
+        // extract current date
         for (var article in data.articles!) {
           String serverDate = MethodUtil.dateConvert(article.publishedDate!);
           if (serverDate.split(' ')[0] == MethodUtil.getCurrentDate()) {
@@ -93,6 +94,7 @@ abstract class HomeStoreBase with Store {
     List<ArticleModel> savedArticles = [];
     savedArticles = await _fetchArticle.executeGetSavedArticles();
     bool isFound = false;
+    // check duplicate article
     for (ArticleModel savedArticleModel in savedArticles) {
       if (savedArticleModel.publishedDate == articleModel.publishedDate) {
         isFound = true;

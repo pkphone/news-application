@@ -51,12 +51,20 @@ dependencies:
   # JSON serialization and deserialization
   json_annotation:
 
+  # Functional programming
   dartz: ^0.10.1
+
+  # compare objects
   equatable: ^2.0.3
+
+  # Provides internationalization and localization facilities
   intl: ^0.17.0
+
+  # show preview of the web url
   any_link_preview: ^2.0.9
+
+  # launching a URL
   url_launcher: ^6.1.5
-  fluttertoast: ^8.0.9
 
 
   # The following adds the Cupertino Icons font to your application.
