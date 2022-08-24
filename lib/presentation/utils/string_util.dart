@@ -4,4 +4,14 @@ class StringUtil {
   static const int timeout = 10000;
   static const String errorPreRenderPage = 'Oops!There is an error.';
   static const String savedArticles = 'Saved articles';
+  static const List<String> topics = [
+    'WORLD',
+    'NATION',
+    'BUSINESS',
+    'TECHNOLOGY',
+    'ENTERTAINMENT',
+    'SCIENCE',
+    'SPORTS',
+    'HEALTH',
+  ];
 }

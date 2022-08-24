@@ -32,13 +32,17 @@ abstract class HomeStoreBase with Store {
   @observable
   List<ArticleModel> articles = [];
 
+  @observable
+  String? topicName;
+
   @action
-  Future fetchArticles() async {
+  Future fetchArticles(String topic) async {
     isLoadingHomePage = true;
     errorMsg = '';
     currentIndex = 0;
+    topicName = topic;
     articleResponseModel = ArticleResponseModel();
-    final result = await _fetchArticle.executeGetArticles();
+    final result = await _fetchArticle.executeGetArticles(topic);
     result.fold(
       (failure) {
         errorMsg = failure.message;

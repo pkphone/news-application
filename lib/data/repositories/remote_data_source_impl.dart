@@ -11,10 +11,11 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   APIService service = Modular.get<APIService>();
 
   @override
-  Future<Either<Failure, ArticleResponseModel>> fetchArticles() async {
+  Future<Either<Failure, ArticleResponseModel>> fetchArticles(
+      String topic) async {
     try {
       ArticleResponseModel articleResponseModel =
-          await service.fetchArticles('WORLD', 'US', 'en-US', '50');
+          await service.fetchArticles(topic, 'US', 'en-US', '50');
 
       ArticleBox articleBox = await ArticleBox.instance;
       articleBox.deleteArticles();

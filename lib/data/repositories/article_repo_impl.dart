@@ -18,8 +18,9 @@ class ArticleRepoImpl implements ArticleRepo {
   LocalDataSource localDataSource = Modular.get<LocalDataSource>();
 
   @override
-  Future<Either<Failure, ArticleResponseModel>> getArticles() async {
-    return await remoteDataSource.fetchArticles();
+  Future<Either<Failure, ArticleResponseModel>> getArticles(
+      String topic) async {
+    return await remoteDataSource.fetchArticles(topic);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:news_application/presentation/mobx/home_store.dart';
 import 'package:news_application/presentation/utils/method_util.dart';
 import 'package:news_application/presentation/utils/string_util.dart';
+import 'package:news_application/presentation/widgets/topic_button_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _homeStore.fetchArticles();
+    _homeStore.fetchArticles(StringUtil.topics[0]);
     super.initState();
   }
 
@@ -137,77 +138,106 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: Observer(builder: (_) {
-        if (_homeStore.isLoadingHomePage) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (_homeStore.errorMsg!.isNotEmpty) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                _homeStore.errorMsg!,
-              ),
-            ),
-          );
-        }
-
-        return Column(
-          children: [
-            Text(_homeStore.articleResponseModel!
-                .articles![_homeStore.currentIndex!].title!),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: AnyLinkPreview(
-                key: Key(_homeStore.articleResponseModel!
-                    .articles![_homeStore.currentIndex!].link!),
-                link: _homeStore.articleResponseModel!
-                    .articles![_homeStore.currentIndex!].link!,
-                displayDirection: UIDirection.uiDirectionHorizontal,
-                cache: const Duration(microseconds: 1),
-                errorWidget: InkWell(
-                  onTap: () {
-                    MethodUtil.launch(_homeStore.articleResponseModel!
-                        .articles![_homeStore.currentIndex!].link!);
-                  },
-                  child: SizedBox(
-                    height: 200.0,
-                    child: Center(
-                        child: Text(
-                      _homeStore.articleResponseModel!
-                          .articles![_homeStore.currentIndex!].link!,
-                    )),
+      body: Column(
+        children: [
+          Observer(builder: (_) {
+            return Wrap(
+              children: List.generate(
+                StringUtil.topics.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: TopicButtonWidget(
+                    color: _homeStore.topicName == StringUtil.topics[index]
+                        ? Colors.blue
+                        : Colors.grey,
+                    name: StringUtil.topics[index],
+                    onPressed: () => _homeStore.fetchArticles(
+                      StringUtil.topics[index],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Text(
-                'Source by ${_homeStore.articleResponseModel!.articles![_homeStore.currentIndex!].source!.title!} ${_homeStore.articleResponseModel!.articles![_homeStore.currentIndex!].source!.url}'),
-            Text(
-              MethodUtil.dateConvert(
-                _homeStore.articleResponseModel!
-                    .articles![_homeStore.currentIndex!].publishedDate!,
-              ),
-            ),
-            IconButton(
-              color: _homeStore.articleIsInBox! ? Colors.blue : Colors.grey,
-              icon: const Icon(
-                Icons.bookmark,
-                size: 50.0,
-              ),
-              onPressed: () async {
-                await _homeStore.saveArticle(_homeStore
-                    .articleResponseModel!.articles![_homeStore.currentIndex!]);
-                _homeStore.checkArticleIsInBox(_homeStore.articleResponseModel!
-                    .articles![_homeStore.currentIndex!].publishedDate!);
-              },
-            ),
-          ],
-        );
-      }),
+            );
+          }),
+          Expanded(
+            child: Observer(builder: (_) {
+              if (_homeStore.isLoadingHomePage) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (_homeStore.errorMsg!.isNotEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      _homeStore.errorMsg!,
+                    ),
+                  ),
+                );
+              }
+
+              return Column(
+                children: [
+                  Text(_homeStore.articleResponseModel!
+                      .articles![_homeStore.currentIndex!].title!),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: AnyLinkPreview(
+                      key: Key(_homeStore.articleResponseModel!
+                          .articles![_homeStore.currentIndex!].link!),
+                      link: _homeStore.articleResponseModel!
+                          .articles![_homeStore.currentIndex!].link!,
+                      displayDirection: UIDirection.uiDirectionHorizontal,
+                      cache: const Duration(microseconds: 1),
+                      errorWidget: InkWell(
+                        onTap: () {
+                          MethodUtil.launch(_homeStore.articleResponseModel!
+                              .articles![_homeStore.currentIndex!].link!);
+                        },
+                        child: SizedBox(
+                          height: 200.0,
+                          child: Center(
+                              child: Text(
+                            _homeStore.articleResponseModel!
+                                .articles![_homeStore.currentIndex!].link!,
+                          )),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                      'Source by ${_homeStore.articleResponseModel!.articles![_homeStore.currentIndex!].source!.title!} ${_homeStore.articleResponseModel!.articles![_homeStore.currentIndex!].source!.url}'),
+                  Text(
+                    MethodUtil.dateConvert(
+                      _homeStore.articleResponseModel!
+                          .articles![_homeStore.currentIndex!].publishedDate!,
+                    ),
+                  ),
+                  IconButton(
+                    color:
+                        _homeStore.articleIsInBox! ? Colors.blue : Colors.grey,
+                    icon: const Icon(
+                      Icons.bookmark,
+                      size: 50.0,
+                    ),
+                    onPressed: () async {
+                      await _homeStore.saveArticle(_homeStore
+                          .articleResponseModel!
+                          .articles![_homeStore.currentIndex!]);
+                      _homeStore.checkArticleIsInBox(_homeStore
+                          .articleResponseModel!
+                          .articles![_homeStore.currentIndex!]
+                          .publishedDate!);
+                    },
+                  ),
+                ],
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 }

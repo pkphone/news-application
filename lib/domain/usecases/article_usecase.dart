@@ -9,8 +9,9 @@ class ArticleUsecase {
 
   ArticleUsecase(this.repository);
 
-  Future<Either<Failure, ArticleResponseModel>> executeGetArticles() {
-    return repository.getArticles();
+  Future<Either<Failure, ArticleResponseModel>> executeGetArticles(
+      String topic) {
+    return repository.getArticles(topic);
   }
 
   Future<void> executeSaveArticle(ArticleModel articleModel) async {

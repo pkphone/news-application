@@ -123,12 +123,28 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
+  late final _$topicNameAtom =
+      Atom(name: 'HomeStoreBase.topicName', context: context);
+
+  @override
+  String? get topicName {
+    _$topicNameAtom.reportRead();
+    return super.topicName;
+  }
+
+  @override
+  set topicName(String? value) {
+    _$topicNameAtom.reportWrite(value, super.topicName, () {
+      super.topicName = value;
+    });
+  }
+
   late final _$fetchArticlesAsyncAction =
       AsyncAction('HomeStoreBase.fetchArticles', context: context);
 
   @override
-  Future<dynamic> fetchArticles() {
-    return _$fetchArticlesAsyncAction.run(() => super.fetchArticles());
+  Future<dynamic> fetchArticles(String topic) {
+    return _$fetchArticlesAsyncAction.run(() => super.fetchArticles(topic));
   }
 
   late final _$checkArticleIsInBoxAsyncAction =
@@ -190,7 +206,8 @@ errorMsg: ${errorMsg},
 currentIndex: ${currentIndex},
 articleIsInBox: ${articleIsInBox},
 isLoadingSavedArticlesPage: ${isLoadingSavedArticlesPage},
-articles: ${articles}
+articles: ${articles},
+topicName: ${topicName}
     ''';
   }
 }
