@@ -1,8 +1,8 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:news_application/data/models/article_model.dart';
-import 'package:news_application/data/models/article_response_model.dart';
 import 'package:news_application/domain/usecases/article_usecase.dart';
+import 'package:news_application/presentation/utils/method_util.dart';
 
 part 'home_store.g.dart';
 
@@ -13,9 +13,6 @@ abstract class HomeStoreBase with Store {
 
   @observable
   bool isLoadingHomePage = false;
-
-  @observable
-  ArticleResponseModel? articleResponseModel;
 
   @observable
   String? errorMsg;
@@ -30,10 +27,13 @@ abstract class HomeStoreBase with Store {
   bool isLoadingSavedArticlesPage = false;
 
   @observable
-  List<ArticleModel> articles = [];
+  List<ArticleModel> savedArticles = [];
 
   @observable
   String? topicName;
+
+  @observable
+  List<ArticleModel> articles = [];
 
   @action
   Future fetchArticles(String topic) async {
@@ -41,17 +41,24 @@ abstract class HomeStoreBase with Store {
     errorMsg = '';
     currentIndex = 0;
     topicName = topic;
-    articleResponseModel = ArticleResponseModel();
+    articles.clear();
     final result = await _fetchArticle.executeGetArticles(topic);
     result.fold(
       (failure) {
         errorMsg = failure.message;
       },
       (data) {
-        articleResponseModel = data;
-        if (articleResponseModel!.articles!.isNotEmpty) {
+        for (var article in data.articles!) {
+          String serverDate = MethodUtil.dateConvert(article.publishedDate!);
+          if (serverDate.split(' ')[0] == MethodUtil.getCurrentDate()) {
+            articles.add(article);
+          }
+        }
+
+        if (articles.isNotEmpty) {
           checkArticleIsInBox(
-              articleResponseModel!.articles![0].publishedDate!);
+            articles[0].publishedDate!,
+          );
         }
       },
     );
@@ -60,7 +67,7 @@ abstract class HomeStoreBase with Store {
 
   @action
   void nextArticle() {
-    if (currentIndex! < articleResponseModel!.articles!.length - 1) {
+    if (currentIndex! < articles.length - 1) {
       currentIndex = currentIndex! + 1;
     }
   }
@@ -100,7 +107,8 @@ abstract class HomeStoreBase with Store {
   @action
   Future getSavedArticles() async {
     isLoadingSavedArticlesPage = false;
-    articles = await _fetchArticle.executeGetSavedArticles();
+    savedArticles.clear();
+    savedArticles = await _fetchArticle.executeGetSavedArticles();
     isLoadingSavedArticlesPage = false;
   }
 }

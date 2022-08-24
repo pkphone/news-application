@@ -28,11 +28,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: Observer(builder: (_) {
         if (_homeStore.currentIndex == null ||
-            _homeStore.errorMsg!.isNotEmpty) {
+            _homeStore.errorMsg!.isNotEmpty ||
+            _homeStore.isLoadingHomePage) {
           return const SizedBox();
-        }
-
-        if (_homeStore.currentIndex == 0) {
+        } else if (_homeStore.articles.length <= 1) {
+          return const SizedBox();
+        } else if (_homeStore.currentIndex == 0) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton.icon(
@@ -40,9 +41,7 @@ class _HomePageState extends State<HomePage> {
                 if (_homeStore.currentIndex != null) {
                   _homeStore.nextArticle();
                   _homeStore.checkArticleIsInBox(_homeStore
-                      .articleResponseModel!
-                      .articles![_homeStore.currentIndex!]
-                      .publishedDate!);
+                      .articles[_homeStore.currentIndex!].publishedDate!);
                 }
               },
               icon: const Icon(
@@ -52,17 +51,14 @@ class _HomePageState extends State<HomePage> {
               label: const Text(''),
             ),
           );
-        }
-
-        if (_homeStore.currentIndex ==
-            _homeStore.articleResponseModel!.articles!.length - 1) {
+        } else if (_homeStore.currentIndex == _homeStore.articles.length - 1) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton.icon(
               onPressed: () {
                 _homeStore.previousArticle();
-                _homeStore.checkArticleIsInBox(_homeStore.articleResponseModel!
-                    .articles![_homeStore.currentIndex!].publishedDate!);
+                _homeStore.checkArticleIsInBox(_homeStore
+                    .articles[_homeStore.currentIndex!].publishedDate!);
               },
               icon: const Icon(
                 Icons.chevron_left,
@@ -82,9 +78,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     _homeStore.previousArticle();
                     _homeStore.checkArticleIsInBox(_homeStore
-                        .articleResponseModel!
-                        .articles![_homeStore.currentIndex!]
-                        .publishedDate!);
+                        .articles[_homeStore.currentIndex!].publishedDate!);
                   },
                   icon: const Icon(
                     Icons.chevron_left,
@@ -102,9 +96,7 @@ class _HomePageState extends State<HomePage> {
                     if (_homeStore.currentIndex != null) {
                       _homeStore.nextArticle();
                       _homeStore.checkArticleIsInBox(_homeStore
-                          .articleResponseModel!
-                          .articles![_homeStore.currentIndex!]
-                          .publishedDate!);
+                          .articles[_homeStore.currentIndex!].publishedDate!);
                     }
                   },
                   icon: const Icon(
@@ -180,39 +172,37 @@ class _HomePageState extends State<HomePage> {
 
               return Column(
                 children: [
-                  Text(_homeStore.articleResponseModel!
-                      .articles![_homeStore.currentIndex!].title!),
+                  Text(_homeStore.articles[_homeStore.currentIndex!].title!),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: AnyLinkPreview(
-                      key: Key(_homeStore.articleResponseModel!
-                          .articles![_homeStore.currentIndex!].link!),
-                      link: _homeStore.articleResponseModel!
-                          .articles![_homeStore.currentIndex!].link!,
+                      key: Key(
+                          _homeStore.articles[_homeStore.currentIndex!].link!),
+                      link: MethodUtil.linkPreviewBugFix(
+                          _homeStore.articles[_homeStore.currentIndex!].link!),
                       displayDirection: UIDirection.uiDirectionHorizontal,
                       cache: const Duration(microseconds: 1),
                       errorWidget: InkWell(
                         onTap: () {
-                          MethodUtil.launch(_homeStore.articleResponseModel!
-                              .articles![_homeStore.currentIndex!].link!);
+                          MethodUtil.launch(_homeStore
+                              .articles[_homeStore.currentIndex!].link!);
                         },
                         child: SizedBox(
                           height: 200.0,
                           child: Center(
                               child: Text(
-                            _homeStore.articleResponseModel!
-                                .articles![_homeStore.currentIndex!].link!,
+                            _homeStore.articles[_homeStore.currentIndex!].link!,
                           )),
                         ),
                       ),
                     ),
                   ),
                   Text(
-                      'Source by ${_homeStore.articleResponseModel!.articles![_homeStore.currentIndex!].source!.title!} ${_homeStore.articleResponseModel!.articles![_homeStore.currentIndex!].source!.url}'),
+                      'Source by ${_homeStore.articles[_homeStore.currentIndex!].source!.title!} ${_homeStore.articles[_homeStore.currentIndex!].source!.url}'),
                   Text(
                     MethodUtil.dateConvert(
-                      _homeStore.articleResponseModel!
-                          .articles![_homeStore.currentIndex!].publishedDate!,
+                      _homeStore
+                          .articles[_homeStore.currentIndex!].publishedDate!,
                     ),
                   ),
                   IconButton(
@@ -223,13 +213,10 @@ class _HomePageState extends State<HomePage> {
                       size: 50.0,
                     ),
                     onPressed: () async {
-                      await _homeStore.saveArticle(_homeStore
-                          .articleResponseModel!
-                          .articles![_homeStore.currentIndex!]);
+                      await _homeStore.saveArticle(
+                          _homeStore.articles[_homeStore.currentIndex!]);
                       _homeStore.checkArticleIsInBox(_homeStore
-                          .articleResponseModel!
-                          .articles![_homeStore.currentIndex!]
-                          .publishedDate!);
+                          .articles[_homeStore.currentIndex!].publishedDate!);
                     },
                   ),
                 ],

@@ -37,12 +37,12 @@ class _SavedArticlesPageState extends State<SavedArticlesPage> {
         }
 
         return ListView.builder(
-            itemCount: _homeStore.articles.length,
+            itemCount: _homeStore.savedArticles.length,
             itemBuilder: ((_, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ArticleItemWidget(
-                  articleModel: _homeStore.articles[index],
+                  articleModel: _homeStore.savedArticles[index],
                 ),
               );
             }));

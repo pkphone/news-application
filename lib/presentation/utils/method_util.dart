@@ -13,4 +13,16 @@ class MethodUtil {
       throw 'Could not launch $url';
     }
   }
+
+  static String getCurrentDate() {
+    var now = DateTime.now();
+    var formatter = DateFormat('dd-MM-yyyy');
+    String formattedDate = formatter.format(now);
+    return formattedDate;
+  }
+
+  static String linkPreviewBugFix(String link) {
+    List<String> paths = link.split('www.');
+    return paths[0] + paths[1];
+  }
 }

@@ -25,23 +25,6 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  late final _$articleResponseModelAtom =
-      Atom(name: 'HomeStoreBase.articleResponseModel', context: context);
-
-  @override
-  ArticleResponseModel? get articleResponseModel {
-    _$articleResponseModelAtom.reportRead();
-    return super.articleResponseModel;
-  }
-
-  @override
-  set articleResponseModel(ArticleResponseModel? value) {
-    _$articleResponseModelAtom.reportWrite(value, super.articleResponseModel,
-        () {
-      super.articleResponseModel = value;
-    });
-  }
-
   late final _$errorMsgAtom =
       Atom(name: 'HomeStoreBase.errorMsg', context: context);
 
@@ -107,19 +90,19 @@ mixin _$HomeStore on HomeStoreBase, Store {
     });
   }
 
-  late final _$articlesAtom =
-      Atom(name: 'HomeStoreBase.articles', context: context);
+  late final _$savedArticlesAtom =
+      Atom(name: 'HomeStoreBase.savedArticles', context: context);
 
   @override
-  List<ArticleModel> get articles {
-    _$articlesAtom.reportRead();
-    return super.articles;
+  List<ArticleModel> get savedArticles {
+    _$savedArticlesAtom.reportRead();
+    return super.savedArticles;
   }
 
   @override
-  set articles(List<ArticleModel> value) {
-    _$articlesAtom.reportWrite(value, super.articles, () {
-      super.articles = value;
+  set savedArticles(List<ArticleModel> value) {
+    _$savedArticlesAtom.reportWrite(value, super.savedArticles, () {
+      super.savedArticles = value;
     });
   }
 
@@ -136,6 +119,22 @@ mixin _$HomeStore on HomeStoreBase, Store {
   set topicName(String? value) {
     _$topicNameAtom.reportWrite(value, super.topicName, () {
       super.topicName = value;
+    });
+  }
+
+  late final _$articlesAtom =
+      Atom(name: 'HomeStoreBase.articles', context: context);
+
+  @override
+  List<ArticleModel> get articles {
+    _$articlesAtom.reportRead();
+    return super.articles;
+  }
+
+  @override
+  set articles(List<ArticleModel> value) {
+    _$articlesAtom.reportWrite(value, super.articles, () {
+      super.articles = value;
     });
   }
 
@@ -201,13 +200,13 @@ mixin _$HomeStore on HomeStoreBase, Store {
   String toString() {
     return '''
 isLoadingHomePage: ${isLoadingHomePage},
-articleResponseModel: ${articleResponseModel},
 errorMsg: ${errorMsg},
 currentIndex: ${currentIndex},
 articleIsInBox: ${articleIsInBox},
 isLoadingSavedArticlesPage: ${isLoadingSavedArticlesPage},
-articles: ${articles},
-topicName: ${topicName}
+savedArticles: ${savedArticles},
+topicName: ${topicName},
+articles: ${articles}
     ''';
   }
 }
