@@ -24,7 +24,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return Right(articleBox.getArticles());
     } on DioError catch (e) {
       if (e.response == null) {
-        return Left(ServerFailure('$e'));
+        return Left(ServerFailure(e.message));
       } else {
         return Left(ServerFailure('${e.response!.data['message']}'));
       }
