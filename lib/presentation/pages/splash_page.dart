@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class SpalshPage extends StatefulWidget {
-  const SpalshPage({Key? key}) : super(key: key);
+class SplashPage extends StatefulWidget {
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
-  State<SpalshPage> createState() => _SpalshPageState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SpalshPageState extends State<SpalshPage> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {

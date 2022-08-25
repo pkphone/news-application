@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:news_application/data/models/article_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MethodUtil {
@@ -28,5 +29,17 @@ class MethodUtil {
     } else {
       return paths[0];
     }
+  }
+
+  static List<ArticleModel> getArticlesFromCurrentDate(
+      List<ArticleModel> articlesList) {
+    List<ArticleModel> articles = [];
+    for (var article in articlesList) {
+      String serverDate = MethodUtil.dateConvert(article.publishedDate!);
+      if (serverDate.split(' ')[0] == MethodUtil.getCurrentDate()) {
+        articles.add(article);
+      }
+    }
+    return articles;
   }
 }

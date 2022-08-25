@@ -10,4 +10,7 @@ abstract class ArticleRepo {
   Future<ArticleModel> getSavedArticle(String publishedDate);
   Future<void> deleteSavedArticle(String publishedDate);
   Future<int> deleteSavedArticles();
+  Future<ArticleResponseModel> getLocalArticles();
+  Future<int> deleteLocalArticles();
+  Future<void> saveLocalArticles(ArticleResponseModel articleResponseModel);
 }

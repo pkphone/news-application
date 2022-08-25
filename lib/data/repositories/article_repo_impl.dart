@@ -47,4 +47,20 @@ class ArticleRepoImpl implements ArticleRepo {
   Future<void> saveArticle(ArticleModel articleModel) async {
     await localDataSource.saveArticle(articleModel);
   }
+
+  @override
+  Future<ArticleResponseModel> getLocalArticles() async {
+    return await localDataSource.getLocalArticles();
+  }
+
+  @override
+  Future<int> deleteLocalArticles() async {
+    return await localDataSource.deleteSavedArticles();
+  }
+
+  @override
+  Future<void> saveLocalArticles(
+      ArticleResponseModel articleResponseModel) async {
+    await localDataSource.saveLocalArticle(articleResponseModel);
+  }
 }

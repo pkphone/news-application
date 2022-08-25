@@ -2,9 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:news_application/data/api_service.dart';
-import 'package:news_application/data/article_box.dart';
 import 'package:news_application/data/failure.dart';
 import 'package:news_application/data/models/article_response_model.dart';
+import 'package:news_application/data/repositories/article_repo_impl.dart';
 import 'package:news_application/domain/repositories/remote_data_source.dart';
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -17,11 +17,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       ArticleResponseModel articleResponseModel =
           await service.fetchArticles(topic, 'US', 'en-US', '50');
 
-      ArticleBox articleBox = await ArticleBox.instance;
-      articleBox.deleteArticles();
-      articleBox.saveArticles(articleResponseModel);
+      ArticleRepoImpl articleRepoImpl = ArticleRepoImpl.instance;
 
-      return Right(articleBox.getArticles());
+      articleRepoImpl.deleteLocalArticles();
+      articleRepoImpl.saveLocalArticles(articleResponseModel);
+
+      ArticleResponseModel localArticleResponseModel =
+          await articleRepoImpl.getLocalArticles();
+
+      return Right(localArticleResponseModel);
     } on DioError catch (e) {
       if (e.response == null) {
         return Left(ServerFailure(e.message));

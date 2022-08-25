@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_application/presentation/mobx/home_store.dart';
 import 'package:news_application/presentation/utils/string_util.dart';
 import 'package:news_application/presentation/widgets/article_item_widget.dart';
@@ -27,9 +28,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Observer(builder: (_) {
-        if (_homeStore.currentIndex == null ||
-            _homeStore.errorMsg!.isNotEmpty ||
-            _homeStore.isLoadingHomePage) {
+        if (_homeStore.currentIndex == null || _homeStore.isLoadingHomePage) {
           return const SizedBox();
         } else if (_homeStore.articles.length <= 1) {
           return const SizedBox();
@@ -157,22 +156,40 @@ class _HomePageState extends State<HomePage> {
               }
 
               if (_homeStore.errorMsg!.isNotEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      _homeStore.errorMsg!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                );
+                Fluttertoast.showToast(
+                    msg: _homeStore.errorMsg!,
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
               }
 
-              if (_homeStore.articles.isEmpty) {
+              if (_homeStore.articles.isEmpty &&
+                  _homeStore.errorMsg!.isNotEmpty) {
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.book,
+                        size: 40.0,
+                      ),
+                      Text(
+                        StringUtil.articlesLocalEmpty,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (_homeStore.articles.isEmpty &&
+                  _homeStore.errorMsg!.isEmpty) {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Column(
@@ -194,6 +211,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               }
+
+              // reset error message
+              _homeStore.errorMsg = '';
 
               return ArticleItemWidget(
                 articleModel: _homeStore.articles[_homeStore.currentIndex!],

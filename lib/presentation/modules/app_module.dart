@@ -43,7 +43,7 @@ class AppModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute(
           Modular.initialRoute,
-          child: (_, __) => const SpalshPage(),
+          child: (_, __) => const SplashPage(),
         ),
         ModuleRoute(
           '/home',

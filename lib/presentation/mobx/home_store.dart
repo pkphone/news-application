@@ -43,19 +43,27 @@ abstract class HomeStoreBase with Store {
     topicName = topic;
     articles.clear();
     final result = await _fetchArticle.executeGetArticles(topic);
-    result.fold(
-      (failure) {
-        errorMsg = failure.message;
-      },
-      (data) {
+    await result.fold(
+      (failure) async {
         // extract data by current date
-        for (var article in data.articles!) {
-          String serverDate = MethodUtil.dateConvert(article.publishedDate!);
-          if (serverDate.split(' ')[0] == MethodUtil.getCurrentDate()) {
-            articles.add(article);
-          }
+        final result = await _fetchArticle.executeGetLocalArticles();
+        articles
+            .addAll(MethodUtil.getArticlesFromCurrentDate(result.articles!));
+
+        // check save or not
+        if (articles.isNotEmpty) {
+          checkArticleIsInBox(
+            articles[0].publishedDate!,
+          );
         }
 
+        errorMsg = failure.message;
+      },
+      (data) async {
+        // extract data by current date
+        articles.addAll(MethodUtil.getArticlesFromCurrentDate(data.articles!));
+
+        // check save or not
         if (articles.isNotEmpty) {
           checkArticleIsInBox(
             articles[0].publishedDate!,

@@ -25,7 +25,7 @@ class ArticleBox implements Disposable {
     return _box.get('article')!;
   }
 
-  Future deleteArticles() {
+  Future<int> deleteArticles() {
     return _box.clear();
   }
 

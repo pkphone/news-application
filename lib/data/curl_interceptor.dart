@@ -8,7 +8,7 @@ class CURLInterceptor extends Interceptor {
       RequestOptions options, RequestInterceptorHandler handler) async {
     logger.i(CURLGenerator.getCURLFromRequest(options));
     options.headers.addAll({
-      'X-RapidAPI-Key': '8c45c3eafemsh87ae471f7a1bd39p18d582jsn44250b973a58',
+      'X-RapidAPI-Key': '69ff2aeca5mshd999a3ee5928595p1f0b46jsn94d179238846',
       'X-RapidAPI-Host': 'google-news1.p.rapidapi.com',
     });
     super.onRequest(options, handler);

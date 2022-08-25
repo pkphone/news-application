@@ -25,4 +25,8 @@ class ArticleUsecase {
   Future<List<ArticleModel>> executeGetSavedArticles() {
     return repository.getSavedArticles();
   }
+
+  Future<ArticleResponseModel> executeGetLocalArticles() {
+    return repository.getLocalArticles();
+  }
 }
