@@ -171,6 +171,15 @@ mixin _$HomeStore on HomeStoreBase, Store {
     return _$getSavedArticlesAsyncAction.run(() => super.getSavedArticles());
   }
 
+  late final _$deleteSavedArticlesAsyncAction =
+      AsyncAction('HomeStoreBase.deleteSavedArticles', context: context);
+
+  @override
+  Future<dynamic> deleteSavedArticles(String publishedDate) {
+    return _$deleteSavedArticlesAsyncAction
+        .run(() => super.deleteSavedArticles(publishedDate));
+  }
+
   late final _$HomeStoreBaseActionController =
       ActionController(name: 'HomeStoreBase', context: context);
 

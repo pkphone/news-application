@@ -106,11 +106,14 @@ abstract class HomeStoreBase with Store {
     for (ArticleModel savedArticleModel in savedArticles) {
       if (savedArticleModel.publishedDate == articleModel.publishedDate) {
         isFound = true;
+        break;
       }
     }
 
     if (!isFound) {
       await _fetchArticle.executeSaveArticle(articleModel);
+    } else {
+      await _fetchArticle.deleteSavedArticle(articleModel.publishedDate!);
     }
   }
 
@@ -120,5 +123,11 @@ abstract class HomeStoreBase with Store {
     savedArticles.clear();
     savedArticles = await _fetchArticle.executeGetSavedArticles();
     isLoadingSavedArticlesPage = false;
+  }
+
+  @action
+  Future deleteSavedArticles(String publishedDate) async {
+    await _fetchArticle.deleteSavedArticle(publishedDate);
+    savedArticles = await _fetchArticle.executeGetSavedArticles();
   }
 }

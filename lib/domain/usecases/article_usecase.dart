@@ -29,4 +29,8 @@ class ArticleUsecase {
   Future<ArticleResponseModel> executeGetLocalArticles() {
     return repository.getLocalArticles();
   }
+
+  Future<void> deleteSavedArticle(String publishedDate) async {
+    await repository.deleteSavedArticle(publishedDate);
+  }
 }

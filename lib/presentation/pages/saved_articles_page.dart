@@ -70,7 +70,10 @@ class _SavedArticlesPageState extends State<SavedArticlesPage> {
                 child: ArticleItemWidget(
                   articleModel: _homeStore.savedArticles[index],
                   articleIsInBox: true,
-                  onPressedSave: (() async {}),
+                  onPressedSave: (() async {
+                    _homeStore.deleteSavedArticles(
+                        _homeStore.savedArticles[index].publishedDate!);
+                  }),
                 ),
               );
             }));
