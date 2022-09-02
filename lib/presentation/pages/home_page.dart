@@ -118,6 +118,8 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Modular.to.pushNamed(
                     '/home/saved-articles',
+                    arguments: _homeStore
+                        .articles[_homeStore.currentIndex!].publishedDate!,
                   );
                 },
                 icon: const Icon(

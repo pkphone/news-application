@@ -6,7 +6,12 @@ import 'package:news_application/presentation/utils/string_util.dart';
 import 'package:news_application/presentation/widgets/article_item_widget.dart';
 
 class SavedArticlesPage extends StatefulWidget {
-  const SavedArticlesPage({Key? key}) : super(key: key);
+  const SavedArticlesPage({
+    Key? key,
+    required this.publishedDate,
+  }) : super(key: key);
+
+  final String publishedDate;
 
   @override
   State<SavedArticlesPage> createState() => _SavedArticlesPageState();
@@ -73,6 +78,11 @@ class _SavedArticlesPageState extends State<SavedArticlesPage> {
                   onPressedSave: (() async {
                     _homeStore.deleteSavedArticles(
                         _homeStore.savedArticles[index].publishedDate!);
+                    // check current news is save or not when user changed in the saved list
+                    if (widget.publishedDate ==
+                        _homeStore.savedArticles[index].publishedDate!) {
+                      _homeStore.checkArticleIsInBox(widget.publishedDate);
+                    }
                   }),
                 ),
               );

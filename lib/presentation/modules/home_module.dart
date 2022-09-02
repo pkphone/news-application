@@ -11,7 +11,9 @@ class HomeModule extends Module {
         ),
         ChildRoute(
           '/saved-articles',
-          child: (_, __) => const SavedArticlesPage(),
+          child: (_, args) => SavedArticlesPage(
+            publishedDate: args.data,
+          ),
         ),
       ];
 }
